@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>パスワード設定</title>
+<style>
+  body { font-family: sans-serif; max-width: 400px; margin: 100px auto; padding: 20px; }
+  input { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; box-sizing: border-box; }
+  button { width: 100%; padding: 12px; background: #2c5282; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 6px; }
+  #msg { margin-top: 16px; font-size: 14px; }
+</style>
+</head>
+<body>
+<h2>パスワードを設定</h2>
+<input type="password" id="password" placeholder="新しいパスワード（8文字以上）">
+<button onclick="setPassword()">設定する</button>
+<p id="msg"></p>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://wkmvhngulejrygrvcbws.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndrbXZobmd1bGVqcnlncnZjYndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxMDg3OTMsImV4cCI6MjA5MDY4NDc5M30.vjXFK0wP4XFa5J4GDfV4Rnpe2Wcgk8UZgfPkMtpM1KE'
+);
+
+async function setPassword() {
+  const password = document.getElementById('password').value;
+  if (password.length < 8) {
+    document.getElementById('msg').textContent = '8文字以上で入力してください';
+    return;
+  }
+  const { error } = await sb.auth.updateUser({ password });
+  if (error) {
+    document.getElementById('msg').textContent = 'エラー: ' + error.message;
+  } else {
+    document.getElementById('msg').textContent = 'パスワードを設定しました！';
+  }
+}
+</script>
+</body>
+</html>
